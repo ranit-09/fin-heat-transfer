@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cylindrical Fin Heat Transfer Analysis</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="script.js"></script>
+</head>
+
+<body class="bg-gray-50 p-8">
+  <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl p-6">
+    <h2 class="text-2xl font-bold mb-4 text-center text-blue-700">Cylindrical Fin Heat Transfer Analysis</h2>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="font-semibold">Number of measurement points (N):</label>
+        <input id="N" type="number" value="4" class="w-full border rounded p-2">
+      </div>
+
+      <div>
+        <label class="font-semibold">Ambient temperature Ta (°C):</label>
+        <input id="Ta" value="25" class="w-full border rounded p-2">
+      </div>
+
+      <div>
+        <label class="font-semibold">x values (m), comma-separated:</label>
+        <input id="xVals" value="0,0.02,0.04,0.06" class="w-full border rounded p-2">
+      </div>
+
+      <div>
+        <label class="font-semibold">T(x) values (°C), comma-separated:</label>
+        <input id="tVals" value="100,80,65,55" class="w-full border rounded p-2">
+      </div>
+
+      <div>
+        <label class="font-semibold">Fin diameter D (m):</label>
+        <input id="D" value="0.01" class="w-full border rounded p-2">
+      </div>
+
+      <div>
+        <label class="font-semibold">Fin length L (m):</label>
+        <input id="L" value="0.1" class="w-full border rounded p-2">
+      </div>
+
+      <div class="col-span-2">
+        <label class="font-semibold">Thermal conductivity k (W/m·K):</label>
+        <input id="k" value="200" class="w-full border rounded p-2">
+      </div>
+    </div>
+
+    <button onclick="calculate()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded mt-4 w-full">
+      Compute
+    </button>
+
+    <div id="output" class="mt-6 bg-gray-100 rounded p-4"></div>
+
+    <div class="mt-6">
+      <canvas id="chart" height="300"></canvas>
+    </div>
+  </div>
+</body>
+</html>
