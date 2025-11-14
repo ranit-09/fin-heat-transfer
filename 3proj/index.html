@@ -1,73 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cylindrical Fin Heat Transfer Analysis</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script defer src="script.js"></script>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: "Noto Sans", sans-serif;
-      /* height: 100vh; */
-      background: linear-gradient(135deg, #8a2be2, #4169e1);
-    }
-  </style>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cylindrical Fin Heat Transfer Analysis</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="script.js"></script>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: "Noto Sans", sans-serif;
+        /* height: 100vh; */
+        background: linear-gradient(135deg, #8a2be2, #4169e1);
+      }
+    </style>
+  </head>
 
-<body class="bg-gray-50 p-8">
-  <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl p-6">
-    <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">Cylindrical Fin Heat Transfer Analysis</h2>
+  <body class="bg-gray-50 p-8">
+    <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl p-6">
+      <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">
+        Cylindrical Fin Heat Transfer Analysis
+      </h2>
 
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <label for="inputPoints" class="font-semibold">Number of measurement points (N):</label>
-        <input id="inputPoints" type="number" value="4" class="w-full border rounded p-2">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="inputPoints" class="font-semibold"
+            >Number of measurement points (N):</label
+          >
+          <input
+            id="inputPoints"
+            type="number"
+            value="4"
+            class="w-full border rounded p-2"
+          />
+        </div>
+
+        <div>
+          <label for="Ta" class="font-semibold"
+            >Ambient temperature Ta (°C):</label
+          >
+          <input id="Ta" value="25" class="w-full border rounded p-2" />
+        </div>
+
+        <div>
+          <label for="xVals" class="font-semibold"
+            >x values (m), comma-separated:</label
+          >
+          <input
+            id="xVals"
+            value="0,0.02,0.04,0.06"
+            class="w-full border rounded p-2"
+          />
+        </div>
+
+        <div>
+          <label for="tempValues" class="font-semibold"
+            >T(x) values (°C), comma-separated:</label
+          >
+          <input
+            id="tempValues"
+            value="100,80,65,55"
+            class="w-full border rounded p-2"
+          />
+        </div>
+
+        <div>
+          <label for="D" class="font-semibold">Fin diameter D (m):</label>
+          <input id="D" value="0.01" class="w-full border rounded p-2" />
+        </div>
+
+        <div>
+          <label for="L" class="font-semibold">Fin length L (m):</label>
+          <input id="L" value="0.1" class="w-full border rounded p-2" />
+        </div>
+
+        <div class="col-span-2">
+          <label for="k" class="font-semibold"
+            >Thermal conductivity k (W/m·K):</label
+          >
+          <input id="k" value="200" class="w-full border rounded p-2" />
+        </div>
       </div>
 
-      <div>
-        <label for="Ta" class="font-semibold">Ambient temperature Ta (°C):</label>
-        <input id="Ta" value="25" class="w-full border rounded p-2">
-      </div>
+      <button
+        onclick="calculate()"
+        class="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg shadow-lg transition duration-300"
+      >
+        Compute
+      </button>
 
-      <div>
-        <label for="xVals" class="font-semibold">x values (m), comma-separated:</label>
-        <input id="xVals" value="0,0.02,0.04,0.06" class="w-full border rounded p-2">
-      </div>
+      <div id="output" class="mt-6 bg-gray-100 rounded p-4"></div>
 
-      <div>
-        <label for="tempValues" class="font-semibold">T(x) values (°C), comma-separated:</label>
-        <input id="tempValues" value="100,80,65,55" class="w-full border rounded p-2">
-      </div>
-
-      <div>
-        <label for ="D" class="font-semibold">Fin diameter D (m):</label>
-        <input id="D" value="0.01" class="w-full border rounded p-2">
-      </div>
-
-      <div>
-        <label for="L" class="font-semibold">Fin length L (m):</label>
-        <input id="L" value="0.1" class="w-full border rounded p-2">
-      </div>
-
-      <div class="col-span-2">
-        <label for="k" class="font-semibold">Thermal conductivity k (W/m·K):</label>
-        <input id="k" value="200" class="w-full border rounded p-2">
+      <div class="mt-6">
+        <canvas id="chart" height="300"></canvas>
       </div>
     </div>
-
-    <button onclick="calculate()" class="mt-6 w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg shadow-lg transition duration-300">
-      Compute
-    </button>
-
-    <div id="output" class="mt-6 bg-gray-100 rounded p-4"></div>
-
-    <div class="mt-6">
-      <canvas id="chart" height="300"></canvas>
-    </div>
-  </div>
-</body>
+  </body>
 </html>
