@@ -1,91 +1,91 @@
 function calculate() {
-  const N = parseInt(document.getElementById("N").value);
-  const x = document.getElementById("xVals").value.split(",").map(Number);
-  const T = document.getElementById("tVals").value.split(",").map(Number);
-  const Ta = parseFloat(document.getElementById("Ta").value);
-  const D = parseFloat(document.getElementById("D").value);
-  const L = parseFloat(document.getElementById("L").value);
-  const k = parseFloat(document.getElementById("k").value);
+  const inputPoints = parseInt(document.getElementById("inputPoints").value);
+  const xLength = document.getElementById("xVals").value.split(",").map(Number);
+  const temperatureValues = document.getElementById("tempValues").value.split(",").map(Number);
+  const ambientTemperature = parseFloat(document.getElementById("Ta").value);
+  const diameter = parseFloat(document.getElementById("D").value);
+  const conductivityK = parseFloat(document.getElementById("k").value);
 
-  if (x.length !== N || T.length !== N) {
-    alert("Error: Number of x and T values must equal N.");
+  if (xLength.length !== inputPoints || temperatureValues.length !== inputPoints) {
+    alert("Error: Number of xLength and temperature values must equal inputPoints.");
     return;
   }
 
   const y = [];
-  for (let i = 0; i < N; i++) {
-    if (T[i] <= Ta) {
-      alert("Error: Ti must be greater than Ta at all points.");
+  for (let i = 0; i < inputPoints; i++) {
+    if (temperatureValues[i] <= ambientTemperature) {
+      alert("Error: Temperature must be greater than ambient temperature at all points.");
       return;
     }
-    y.push(Math.log(T[i] - Ta));
+    y.push(Math.log(temperatureValues[i] - ambientTemperature));
   }
 
-  // Linear regression y = c - m*x
-  const sumX = x.reduce((a,b) => a+b, 0);
-  const sumY = y.reduce((a,b) => a+b, 0);
-  const sumXY = x.map((xi, i) => xi * y[i]).reduce((a,b) => a+b, 0);
-  const sumX2 = x.map(xi => xi*xi).reduce((a,b) => a+b, 0);
+  const sumX = xLength.reduce((a, b) => a + b, 0);
+  const sumY = y.reduce((a, b) => a + b, 0);
+  const sumXY = xLength.map((xi, i) => xi * y[i]).reduce((a, b) => a + b, 0);
+  const sumX2 = xLength.map((xi) => xi * xi).reduce((a, b) => a + b, 0);
 
-  const m_neg = (N * sumXY - sumX * sumY) / (N * sumX2 - sumX * sumX);
-  const c = (sumY - m_neg * sumX) / N;
+  const m_neg = (inputPoints * sumXY - sumX * sumY) /
+                (inputPoints * sumX2 - sumX * sumX);
+  const c = (sumY - m_neg * sumX) / inputPoints;
 
   const m = -m_neg;
-  const Tb = Math.exp(c) + Ta;
+  const Tb = Math.exp(c) + ambientTemperature;
 
-  // Geometry
-  const A = Math.PI * D * D / 4;
-  const P = Math.PI * D;
-  const h = (m * m * k * A) / P;
+  const A = (Math.PI * diameter * diameter) / 4;
+  const P = Math.PI * diameter;
+  const h = (m * m * conductivityK * A) / P;
 
   document.getElementById("output").innerHTML = `
-    <h3 class="font-semibold text-lg text-blue-700 mb-2">Results</h3>
+    <h3 class="font-semibold text-lg text-purple-700 mb-2">Results</h3>
     <p><b>Fin parameter (m):</b> ${m.toFixed(4)} 1/m</p>
     <p><b>Base temperature (Tb):</b> ${Tb.toFixed(2)} °C</p>
     <p><b>Convective heat transfer coefficient (h):</b> ${h.toFixed(2)} W/m²·K</p>
   `;
 
-  plotData(x, T, Ta, Tb, m);
+  plotData(xLength, temperatureValues, ambientTemperature, Tb, m);
 }
 
-let chart; // global chart reference
+let chart;
 
-function plotData(x, T, Ta, Tb, m) {
-  const fitT = x.map(xi => Ta + (Tb - Ta) * Math.exp(-m * xi));
+function plotData(xLength, temperatureValues, ambientTemperature, Tb, m) {
+  const fitT = xLength.map((xi) =>
+    ambientTemperature + (Tb - ambientTemperature) * Math.exp(-m * xi)
+  );
 
   const ctx = document.getElementById("chart").getContext("2d");
 
-  if (chart) chart.destroy(); // clear old plot
+  if (chart) chart.destroy();
 
   chart = new Chart(ctx, {
     type: "line",
     data: {
-      labels: x,
+      labels: xLength,
       datasets: [
         {
-          label: "Measured T(x)",
-          data: T,
+          label: "Measured Temperature",
+          data: temperatureValues,
           borderColor: "red",
           borderWidth: 2,
           pointRadius: 4,
           fill: false,
         },
         {
-          label: "Fitted T(x)",
+          label: "Fitted Temperature",
           data: fitT,
           borderColor: "blue",
           borderDash: [6, 4],
           borderWidth: 2,
           fill: false,
-        }
-      ]
+        },
+      ],
     },
     options: {
       responsive: true,
       scales: {
         x: { title: { display: true, text: "x (m)" } },
-        y: { title: { display: true, text: "Temperature (°C)" } }
-      }
-    }
+        y: { title: { display: true, text: "Temperature (°C)" } },
+      },
+    },
   });
 }
