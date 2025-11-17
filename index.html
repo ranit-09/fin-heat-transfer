@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Cylindrical Fin Heat Transfer — Visual</title>
 
-    <!-- Tailwind CDN for utility classes (optional) -->
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
@@ -16,7 +15,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.2.1/dist/chartjs-plugin-zoom.min.js"></script>
 
     <style>
-      /* Ensure cards stay side-by-side and shrink to fit (option C) */
       .cards {
         display: flex;
         gap: 1rem;
@@ -42,12 +40,10 @@
         margin-bottom: 8px;
       }
 
-      /* Make canvas fill the card nicely */
       .card canvas {
         flex: 1 1 auto;
       }
 
-      /* Small screens tweak: still side-by-side but smaller */
       @media (max-width: 420px) {
         .card {
           min-width: 140px;
@@ -68,17 +64,17 @@
 
       <div class="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <label class="font-semibold">Number of measurement points (N):</label>
+          <label for="inputPoints" class="font-semibold">Number of measurement points (N):</label>
           <input
             id="inputPoints"
             type="number"
-            value="4"
+            value="10"
             class="w-full border rounded p-2"
           />
         </div>
 
         <div>
-          <label class="font-semibold">Ambient temperature Ta (°C):</label>
+          <label for="Ta" class="font-semibold">Ambient temperature Ta (°C):</label>
           <input
             id="Ta"
             type="number"
@@ -88,37 +84,39 @@
         </div>
 
         <div>
-          <label class="font-semibold">x values (m), comma-separated:</label>
+          <label for="xVals" class="font-semibold">x values (m), comma-separated:</label>
           <input
             id="xVals"
-            value="0,0.02,0.04,0.06"
+            value="0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09
+"
             class="w-full border rounded p-2"
           />
         </div>
 
         <div>
-          <label class="font-semibold"
+          <label for="tempValues" class="font-semibold"
             >T(x) values (°C), comma-separated:</label
           >
           <input
             id="tempValues"
-            value="100,80,65,55"
+            value="100, 88, 79, 71, 64, 58, 53, 48, 44, 41
+"
             class="w-full border rounded p-2"
           />
         </div>
 
         <div>
-          <label class="font-semibold">Fin diameter D (m):</label>
+          <label for="D" class="font-semibold">Fin diameter D (m):</label>
           <input id="D" value="0.01" class="w-full border rounded p-2" />
         </div>
 
         <div>
-          <label class="font-semibold">Fin length L (m):</label>
+          <label for="L" class="font-semibold">Fin length L (m):</label>
           <input id="L" value="0.1" class="w-full border rounded p-2" />
         </div>
 
         <div class="col-span-2">
-          <label class="font-semibold">Thermal conductivity k (W/m·K):</label>
+          <label for="k" class="font-semibold">Thermal conductivity k (W/m·K):</label>
           <input id="k" value="200" class="w-full border rounded p-2" />
         </div>
       </div>
@@ -140,7 +138,6 @@
 
       <div id="output" class="mt-4 bg-gray-100 rounded p-4"></div>
 
-      <!-- Side-by-side cards (option C) -->
       <div class="cards mt-6">
         <div class="card">
           <h3 class="text-center font-semibold">Temperature vs Distance</h3>
@@ -159,7 +156,6 @@
       </p>
     </div>
 
-    <!-- Your script (deferred) -->
     <script src="script.js" defer></script>
   </body>
 </html>
